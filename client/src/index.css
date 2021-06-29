@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+*, *::after, *::before{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+}
+
+nav{
+  height: 60px;
+  background: #0d6efd;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 35px;
+}
+
+.nav-brand{
+  font-size: 1.3rem;
+  color: white;
+  font-weight: 400;
+}
+
+.nav{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  height: 100%;
+}
+
+.nav li{
+  margin-right: 20px;
+  height: 100%;
+  padding: 0 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav li:hover{
+  background: white;
+  color: #0d6efd;
+}
+
+.nav li:last-child{
+  margin-right: 0;
+}
+
+.nav li a{
+  font-weight: 300;
+}
+
+.container{
+  width: 70%;
+  margin: 0 auto;
+}
+
+.wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.layout p{
+  text-align: center;
+  letter-spacing: 0.4px;
+  line-height: 1.4;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.layout p:first-child{
+  margin-bottom: 20px;
+}
+
+.layout .button-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.layout .button-group a{
+  background: #0d6efd;
+  color: white;
+  padding: 10px 35px;
+  font-weight: 300;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+.layout .button-group a:hover{
+  background: #336fca;
+}
+
+.layout .button-group a:last-child{
+  margin-right: 0;
+}
+
+form{
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+form h3{
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.input-group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.input-group label{
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.input-group input{
+  border: 1px solid #333;
+  border-radius: 3px;
+  padding: 8px 15px;
+  outline: none;
+  color: #333;
+}
+
+form button{
+  background: #0d6efd;
+  color: white;
+  padding: 8px 25px;
+  font-size: 1.1rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  border: none;
+  border-radius: 3px;
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
+form button:hover{
+  cursor: pointer;
+  background: #336fca;
+}
+
+form a:last-child{
+  color: rgb(51, 109, 202);
+}
+
+form a:last-child:hover{
+  text-decoration: underline;
+}
+
+.profile{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+
+.profile-right h2{
+  font-weight: 400;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.sidenav{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  background: #0d6efd;
+  color: white;
+  list-style: none;
+  border-radius: 3px;
+  margin-right: 80px;
+}
+
+.sidenav li{
+  width: 100%;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 300;
+}
+
+.sidenav li:hover{
+  cursor: pointer;
+  background: #5f8bce;
+}
+
+.sidenav li:last-child{
+  margin-bottom: 0;
+}
+
+.list{
+  width: 400px;
+  list-style: none;
+}
+
+.list-item{
+  width: 100%;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 7px 3px rgba(0, 0, 0, 0.15);
+}
+
+.list-item-group {
+  margin-bottom: 10px;
+}
+
+.list-item-group:last-child{
+  margin-bottom: 0;
+}
+
+.list-item-group label{
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.list-item-group span{
+  color: rgb(214, 50, 50);
+}
+
+.nested-list h4{
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 10px;
+  width: fit-content;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
+
+.nested-list ul{
+  list-style: none;
+  padding-left: 25px;
+}
+
+.nested-list ul li{
+  margin-bottom: 10px;
+}
+
+.nested-list ul li:last-child{
+  margin-bottom: 0;
+}
+
+.nested-list ul label{
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.nested-list ul span{
+  color: rgb(214, 50, 50);
+}
+
+.list-item > h4{
+  text-align: center;
+  margin-top: 15px;
+  border-bottom: 1px solid #333;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+}
+
+.list-item button{
+  background: rgb(190, 52, 52);
+  color: white;
+  border: none;
+  padding: 8px 30px;
+  margin-top: 20px;
+  font-size: 1rem;
+  border-radius: 3px;
+}
+
+.list-item button:hover{
+  cursor: pointer;
+  background: rgb(216, 78, 78);
+}
