@@ -51,7 +51,7 @@ const Paypal = () => {
                     .order
                     .capture()
                     .then(
-                        async (details) => dispatch(saveTransaction(user._id, token, details))
+                        (details) => dispatch(saveTransaction(user._id, token, details))
                     );
                 }}
                 onCancel={(data) => {

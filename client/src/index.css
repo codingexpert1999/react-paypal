@@ -281,6 +281,14 @@ form a:last-child:hover{
   color: rgb(214, 50, 50);
 }
 
+.list-item {
+  margin-bottom: 20px;
+}
+
+.list-item:last-child{
+  margin-bottom: 0;
+}
+
 .list-item > h4{
   text-align: center;
   margin-top: 15px;

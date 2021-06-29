@@ -20,8 +20,10 @@ export const getTransactions = (userId, token) => async (dispatch) => {
 
 export const saveTransaction = (userId, token, transactionDetails) => async (dispatch) => {
     try {
+        console.log(transactionDetails)
         const config = {
             headers: {
+                'Content-Type': "application/json",
                 Authorization: `Bearer ${token}`
             }
         }
