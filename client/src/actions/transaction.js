@@ -10,6 +10,7 @@ export const getTransactions = (userId, token) => async (dispatch) => {
                 Authorization: `Bearer ${token}`
             }
         }
+        
         const res = await axios.get(`${API}/transactions/${userId}`, config);
 
         dispatch({type: GET_TRANSACTIONS, payload: res.data})
