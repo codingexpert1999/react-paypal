@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import TransactionItem from './TransactionItem'
+import {useDispatch, useSelector} from 'react-redux'
+import { getFullRefund } from '../../../actions/transaction'
 
 const Transaction = ({transaction}) => {
+    const dispatch = useDispatch();
+    
+    const {token, user} = useSelector(state => state.user)
+    const {loading} = useSelector(state => state.transaction);
+
+    const handleRefund = () => {
+        const amount = {
+            currency: transaction.amount.currency_code,
+            total: transaction.amount.value
+        }
+
+        dispatch(getFullRefund(user._id, token, transaction._id, amount))
+    }
+
     return (
         <li className="list-item">
             <div className="list-item-group">
@@ -61,7 +77,7 @@ const Transaction = ({transaction}) => {
                 ))}
             </div>
 
-            <button>Refund</button>
+            <button onClick={handleRefund} className={loading ? 'disabled' : ''} disabled={loading}>Refund</button>
         </li>
     )
 }

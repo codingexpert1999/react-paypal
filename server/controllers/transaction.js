@@ -1,5 +1,14 @@
 const {validationResult} = require("express-validator")
 const Transaction = require('../models/Transaction')
+const Refund = require('../models/Refund')
+const axios = require('axios')
+const dotenv = require('dotenv')
+
+dotenv.config()
+
+const username = process.env.CLIENT_ID;
+const password = process.env.CLIENT_SECRET;
+
 
 exports.get = async (req, res) => {
     try {
@@ -57,6 +66,84 @@ exports.create = async (req, res) => {
         res.json(transaction)
     } catch (err) {
         console.log(err);
+        res.status(500).json({error: err.message})
+    }
+}
+
+exports.getFullRefund = async (req, res) => {
+    try {
+        const errors = validationResult(req)
+
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()})
+        }
+
+        const transactionId = req.params.transactionId;
+
+        const {amount} = req.body
+
+        const {data: { access_token }} = await axios({
+            url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
+            method: 'post',
+            headers: {
+                Accept: 'application/json',
+                'Accept-Language': 'en_US',
+                'Accept-Language': 'en_US',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            auth: {
+                username,
+                password,
+            },
+            params: {
+                grant_type: 'client_credentials',
+            },
+        });
+
+        const config = {
+            headers: {
+                'Content-Type': "application/json",
+                Authorization: `Bearer ${access_token}`
+            }
+        }
+
+        const body = JSON.stringify({amount})
+
+        await Transaction.findByIdAndDelete(transactionId)
+
+        const {
+            data: {
+                id, 
+                capture_id, 
+                refund_from_received_amount, 
+                refund_from_transaction_fee,
+                total_refunded_amount
+            }
+        } = await axios.post(`https://api-m.sandbox.paypal.com/v1/payments/capture/${transactionId}/refund`, body, config)
+
+        const refund = await Refund.create({
+            _id: id,
+            capture_id,
+            user: req.user._id,
+            refund_from_received_amount: refund_from_received_amount.value, 
+            refund_from_transaction_fee: refund_from_transaction_fee.value,
+            total_refunded_amount: total_refunded_amount.value
+        })
+
+        res.json(refund)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: err.message})
+    }
+}
+
+exports.getMyRefunds = async (req, res) => {
+    try {
+        const refunds = await Refund.find({user: req.user.id});
+
+        res.json(refunds)
+    } catch (err) {
+        console.log(err)
         res.status(500).json({error: err.message})
     }
 }

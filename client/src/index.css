@@ -311,3 +311,8 @@ form a:last-child:hover{
   cursor: pointer;
   background: rgb(216, 78, 78);
 }
+
+.list-item button.disabled, .list-item button.disabled:hover{
+  background: rgba(190, 52, 52, 0.6);
+  cursor: progress;
+}

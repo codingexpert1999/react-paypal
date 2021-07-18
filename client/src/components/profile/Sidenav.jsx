@@ -2,12 +2,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { logOut } from '../../actions/user'
 
-const Sidenav = () => {
+const Sidenav = ({setSelectedComponent}) => {
     const dispatch = useDispatch()
     
     return (
         <ul className="sidenav">
-            <li>My Transactions</li>
+            <li onClick={() => setSelectedComponent("transactions")}>My Transactions</li>
+            <li onClick={() => setSelectedComponent("refunds")}>My Refunds</li>
             <li>My Subscriptions</li>
             <li onClick={() => dispatch(logOut())}>Log Out</li>
         </ul>
