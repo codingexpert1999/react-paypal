@@ -1,6 +1,7 @@
 const {validationResult} = require("express-validator")
 const Transaction = require('../models/Transaction')
 const Refund = require('../models/Refund')
+const Subscription = require('../models/Subscription')
 const axios = require('axios')
 const dotenv = require('dotenv')
 
@@ -8,7 +9,6 @@ dotenv.config()
 
 const username = process.env.CLIENT_ID;
 const password = process.env.CLIENT_SECRET;
-
 
 exports.get = async (req, res) => {
     try {
@@ -72,7 +72,7 @@ exports.create = async (req, res) => {
 
 exports.getFullRefund = async (req, res) => {
     try {
-        const errors = validationResult(req)
+        const errors = validationResult(req);
 
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
@@ -80,25 +80,24 @@ exports.getFullRefund = async (req, res) => {
 
         const transactionId = req.params.transactionId;
 
-        const {amount} = req.body
+        const {amount} = req.body;
 
-        const {data: { access_token }} = await axios({
-            url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
-            method: 'post',
+        const {data: {access_token}} = await axios({
+            url: "https://api.sandbox.paypal.com/v1/oauth2/token",
+            method: "post",
             headers: {
-                Accept: 'application/json',
-                'Accept-Language': 'en_US',
-                'Accept-Language': 'en_US',
-                'Content-Type': 'application/x-www-form-urlencoded'
+                Accept: "application/json",
+                'Accept-Language': "en_US",
+                'Content-Type': "application/x-www-form-urlencoded"
             },
             auth: {
                 username,
-                password,
+                password
             },
             params: {
-                grant_type: 'client_credentials',
-            },
-        });
+                grant_type: "client_credentials"
+            }
+        })
 
         const config = {
             headers: {
@@ -107,32 +106,33 @@ exports.getFullRefund = async (req, res) => {
             }
         }
 
-        const body = JSON.stringify({amount})
+        const body = JSON.stringify({amount});
 
-        await Transaction.findByIdAndDelete(transactionId)
+        await Transaction.findByIdAndDelete(transactionId);
 
         const {
             data: {
-                id, 
-                capture_id, 
-                refund_from_received_amount, 
+                id,
+                capture_id,
+                refund_from_received_amount,
                 refund_from_transaction_fee,
                 total_refunded_amount
             }
-        } = await axios.post(`https://api-m.sandbox.paypal.com/v1/payments/capture/${transactionId}/refund`, body, config)
+        } = 
+        await axios.post(`https://api-m.sandbox.paypal.com/v1/payments/capture/${transactionId}/refund`, body, config)
 
-        const refund = await Refund.create({
+        const refund = await Refund({
             _id: id,
             capture_id,
             user: req.user._id,
-            refund_from_received_amount: refund_from_received_amount.value, 
-            refund_from_transaction_fee: refund_from_transaction_fee.value,
-            total_refunded_amount: total_refunded_amount.value
+            refund_from_received_amount: refund_from_received_amount.amount,
+            refund_from_transaction_fee: refund_from_transaction_fee.amount,
+            total_refunded_amount: total_refunded_amount.amount
         })
 
         res.json(refund)
     } catch (err) {
-        console.log(err)
+        console.log(err);
         res.status(500).json({error: err.message})
     }
 }
@@ -142,6 +142,92 @@ exports.getMyRefunds = async (req, res) => {
         const refunds = await Refund.find({user: req.user.id});
 
         res.json(refunds)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: err.message})
+    }
+}
+
+exports.subscribe = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()})
+        }
+
+        const {subscriptionDetails} = req.body;
+
+        const {subscriptionID, billingToken, orderID} = subscriptionDetails;
+
+        const subscription = await Subscription.create({
+            _id: subscriptionID,
+            billingToken,
+            orderID,
+            user: req.user._id
+        })
+
+        res.json(subscription)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: err.message})
+    }
+}
+
+exports.unsubscribe = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()})
+        }
+
+        const {reason} = req.body;
+
+        const subscriptionId = req.params.subscriptionId;
+
+        const {data: {access_token}} = await axios({
+            url: "https://api.sandbox.paypal.com/v1/oauth2/token",
+            method: "post",
+            headers: {
+                Accept: "application/json",
+                'Accept-Language': "en_US",
+                'Content-Type': "application/x-www-form-urlencoded"
+            },
+            auth: {
+                username,
+                password
+            },
+            params: {
+                grant_type: "client_credentials"
+            }
+        })
+
+        const config = {
+            headers: {
+                'Content-Type': "application/json",
+                Authorization: `Bearer ${access_token}`
+            }
+        }
+
+        const body = JSON.stringify({reason})
+
+        await axios.post(`https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscriptionId}/cancel`, body, config)
+
+        await Subscription.findByIdAndDelete(subscriptionId);
+
+        res.json({message: `The subscription with ID ${subscriptionId} cancelled successfully!`})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: err.message})
+    }
+}
+
+exports.getMySubscriptions = async (req, res) => {
+    try {
+        const subscriptions = await Subscription.find({user: req.user.id});
+
+        res.json(subscriptions)
     } catch (err) {
         console.log(err)
         res.status(500).json({error: err.message})

@@ -9,7 +9,7 @@ const Sidenav = ({setSelectedComponent}) => {
         <ul className="sidenav">
             <li onClick={() => setSelectedComponent("transactions")}>My Transactions</li>
             <li onClick={() => setSelectedComponent("refunds")}>My Refunds</li>
-            <li>My Subscriptions</li>
+            <li onClick={() => setSelectedComponent("subscriptions")}>My Subscriptions</li>
             <li onClick={() => dispatch(logOut())}>Log Out</li>
         </ul>
     )

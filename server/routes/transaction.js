@@ -1,7 +1,7 @@
 const {Router} = require('express')
 const {userById, requireLogin, isAuthorized} = require('../middlewares/user')
 const {check} = require('express-validator')
-const { create, get, getFullRefund, getMyRefunds } = require('../controllers/transaction')
+const { create, get, getFullRefund, getMyRefunds, getMySubscriptions, subscribe, unsubscribe } = require('../controllers/transaction')
 
 const router = Router()
 
@@ -16,6 +16,16 @@ router.post('/transactions/:transactionId/full_refund/:userId', requireLogin, is
 ], getFullRefund)
 
 router.get("/refunds/:userId", requireLogin, isAuthorized, getMyRefunds);
+
+router.get("/subscriptions/:userId", requireLogin, isAuthorized, getMySubscriptions)
+
+router.post(`/subscribe/:userId`, requireLogin, isAuthorized, [
+    check("subscriptionDetails", "Subscription details are required").notEmpty()
+], subscribe)
+
+router.post(`/subscriptions/:subscriptionId/:userId`, requireLogin, isAuthorized, [
+    check("reason", "Reason is required").notEmpty()
+], unsubscribe)
 
 router.param('userId', userById)
 

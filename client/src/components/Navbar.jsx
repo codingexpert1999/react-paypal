@@ -31,6 +31,9 @@ const Navbar = () => {
                             <Link to="/create-order">Create Order</Link>
                         </li>
                         <li>
+                            <Link to="/subscribe">Subscribe</Link>
+                        </li>
+                        <li>
                             <Link to="/profile">Profile</Link>
                         </li>
                     </>

@@ -3,7 +3,7 @@ import {PayPalScriptProvider, PayPalButtons} from '@paypal/react-paypal-js'
 import {useDispatch, useSelector} from 'react-redux'
 import {saveTransaction} from '../../actions/transaction'
 
-const Paypal = () => {
+const OrderButton = () => {
     const dispatch = useDispatch();
 
     const {user, token} = useSelector(state => state.user)
@@ -60,4 +60,4 @@ const Paypal = () => {
     )
 }
 
-export default Paypal
+export default OrderButton
